@@ -25,7 +25,7 @@ public class MainPageTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://www.jetbrains.com/");
 
-        wait = new WebDriverWait( driver, Duration.ofSeconds( 10));
+        wait = new WebDriverWait( driver, Duration.ofSeconds(10));
 
         mainPage = new MainPage(driver);
 
@@ -34,11 +34,8 @@ public class MainPageTest {
                     ExpectedConditions.elementToBeClickable(mainPage.buttonDenyAll)
             );
             denyAllButton.click();
-
-            // Optional: Keep the small delay if you notice flakiness
             Thread.sleep(500);
         } catch (Exception ignored) {
-            // Log the exception if the banner is not present
             System.out.println("Cookie banner not found or denied.");
         }
 
@@ -65,14 +62,6 @@ public class MainPageTest {
         // click on the "Advanced search Ctrl+K" button near the "Showing results for <<X>>"
         WebElement submitButton = driver.findElement(By.cssSelector("button[data-test='full-search-button']"));
         submitButton.click();
-        try
-        {
-            Thread.sleep( 2000 );
-        }
-        catch( InterruptedException e )
-        {
-            throw new RuntimeException( e );
-        }
 
         //  Check the search results page field element
         WebElement searchResultPageField = driver.findElement(By.cssSelector("input[data-test$='inner']"));
@@ -84,11 +73,21 @@ public class MainPageTest {
     public void toolsMenu() {
         mainPage.toolsMenu.click();
 
-        WebElement menuPopup = driver.findElement(By.cssSelector("div[data-test='main-submenu']"));
-        assertTrue(menuPopup.isDisplayed());
+//    checking if the "Find your tool" button is displayed because for some absolutely stupid reason
+//    this: "div[data-test='main-submenu']"
+//    DOES NOT WORK!!!
+//    and THIS:
+//        "html > body > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(3) > header > div > div > div:nth-of-type(2) > div:nth-of-type(1) > div > nav > div:nth-of-type(2) > div > div" )
+//    IS AN ATROCITY
+
+        WebElement menuPopupElement = wait.until(
+                ExpectedConditions.visibilityOf(mainPage.findYourToolsButton));
+
+        assertTrue(menuPopupElement.isDisplayed());
     }
 
     @Test
+    @DisplayName( "Check JetBrains Tools catalog" )
     public void navigationToAllTools() {
         mainPage.seeDeveloperToolsButton.click();
         mainPage.findYourToolsButton.click();
