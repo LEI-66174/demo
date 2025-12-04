@@ -19,6 +19,16 @@ public class MainPage {
     @FindBy(css = "[data-test='site-header-search-action']")
     public WebElement searchButton;
 
+    @FindBy( css = "button[class='ch2-btn ch2-deny-all-btn ch2-btn-primary']" )
+    public WebElement buttonDenyAll;
+
+    @FindBy(css = "input[data-test='search-input-inner']")
+    public WebElement searchInputField;
+
+    @FindBy( css = "input[data-test*='inner']" )
+    public WebElement inputSearch;
+    
+    
     public MainPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }

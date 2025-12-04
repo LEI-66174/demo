@@ -8,12 +8,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
 public class MainPageTest {
     private WebDriver driver;
     private MainPage mainPage;
+    private WebDriverWait wait;
 
     @BeforeEach
     public void setUp() {
@@ -22,7 +25,23 @@ public class MainPageTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://www.jetbrains.com/");
 
+        wait = new WebDriverWait( driver, Duration.ofSeconds( 10));
+
         mainPage = new MainPage(driver);
+
+        try {
+            WebElement denyAllButton = wait.until(
+                    ExpectedConditions.elementToBeClickable(mainPage.buttonDenyAll)
+            );
+            denyAllButton.click();
+
+            // Optional: Keep the small delay if you notice flakiness
+            Thread.sleep(500);
+        } catch (Exception ignored) {
+            // Log the exception if the banner is not present
+            System.out.println("Cookie banner not found or denied.");
+        }
+
     }
 
     @AfterEach
@@ -31,17 +50,33 @@ public class MainPageTest {
     }
 
     @Test
+    @DisplayName( "Search \"Selenium\" on JetBrains.com" )
     public void search() {
         mainPage.searchButton.click();
 
-        WebElement searchField = driver.findElement(By.cssSelector("[data-test='search-input']"));
-        searchField.sendKeys("Selenium");
+        // wait until its clickable
+        WebElement searchField = wait.until(ExpectedConditions.elementToBeClickable(
+                mainPage.inputSearch
+        ));
 
+        searchField.sendKeys("Selenium");
+        searchField.click();
+
+        // click on the "Advanced search Ctrl+K" button near the "Showing results for <<X>>"
         WebElement submitButton = driver.findElement(By.cssSelector("button[data-test='full-search-button']"));
         submitButton.click();
+        try
+        {
+            Thread.sleep( 2000 );
+        }
+        catch( InterruptedException e )
+        {
+            throw new RuntimeException( e );
+        }
 
-        WebElement searchPageField = driver.findElement(By.cssSelector("input[data-test='search-input']"));
-        assertEquals("Selenium", searchPageField.getAttribute("value"));
+        //  Check the search results page field element
+        WebElement searchResultPageField = driver.findElement(By.cssSelector("input[data-test$='inner']"));
+        assertEquals("Selenium", searchResultPageField.getAttribute("value"));
     }
 
     @Test
