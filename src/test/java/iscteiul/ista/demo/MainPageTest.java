@@ -80,6 +80,7 @@ public class MainPageTest {
     }
 
     @Test
+    @DisplayName( "Show \"Tools\" menu" )
     public void toolsMenu() {
         mainPage.toolsMenu.click();
 
