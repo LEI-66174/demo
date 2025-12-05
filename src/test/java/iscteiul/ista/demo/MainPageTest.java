@@ -1,7 +1,9 @@
 package iscteiul.ista.demo;
 
 import org.junit.jupiter.api.*;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -20,72 +22,67 @@ public class MainPageTest {
     public void setUp() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-
-        // Inicializa o WebDriverWait
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://www.jetbrains.com/");
 
+        wait = new WebDriverWait( driver, Duration.ofSeconds(10));
+
         mainPage = new MainPage(driver);
-        mainPage.acceptCookies();
+
+        try {
+            WebElement denyAllButton = wait.until(
+                    ExpectedConditions.elementToBeClickable(mainPage.buttondenyall)
+            );
+            denyAllButton.click();
+            Thread.sleep(500);
+        } catch (Exception ignored) {
+            System.out.println("Cookie not found.");
+        }
+
     }
 
     @AfterEach
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        driver.quit();
     }
 
     @Test
+    @DisplayName( "Search \"Selenium\" on JetBrains.com" )
     public void search() {
         mainPage.searchButton.click();
 
-        // 🟢 CORREÇÃO: Usa XPath para procurar pelo atributo 'placeholder' ou 'data-test' como fallback.
-        WebElement searchField = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//input[@placeholder='Search'] | //input[@data-test='search-input']")
+        WebElement searchField = wait.until(ExpectedConditions.elementToBeClickable(
+                mainPage.inputSearch
         ));
 
         searchField.sendKeys("Selenium");
-
-        WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(
-                By.cssSelector("button[data-test='full-search-button']")
-        ));
+        searchField.click();
+        WebElement submitButton = driver.findElement(By.cssSelector("button[data-test='full-search-button']"));
         submitButton.click();
 
-        // No search results page
-        WebElement searchPageField = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("input[data-test='search-input'], input[type='search']")
-        ));
-
-        assertEquals("Selenium", searchPageField.getAttribute("value"));
+        //  Check the search results page field element
+        WebElement searchResultPageField = driver.findElement(By.cssSelector("input[data-test$='inner']"));
+        assertEquals("Selenium", searchResultPageField.getAttribute("value"));
     }
 
     @Test
+    @DisplayName( "Show \"Tools\" menu" )
     public void toolsMenu() {
-        wait.until(ExpectedConditions.elementToBeClickable(mainPage.toolsMenu)).click();
+        mainPage.toolsMenu.click();
 
-        // Espera pelo submenu ficar visível
-        WebElement menuPopup = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("div[data-test='main-submenu']")
-        ));
+        WebElement menuPopupElement = wait.until(
+                ExpectedConditions.visibilityOf(mainPage.findYourToolsButton));
 
-        assertTrue(menuPopup.isDisplayed());
+        assertTrue(menuPopupElement.isDisplayed());
     }
 
     @Test
+    @DisplayName( "Check JetBrains Tools catalog" )
     public void navigationToAllTools() {
-        // Usa elementToBeClickable para garantir que o elemento não está coberto
-        wait.until(ExpectedConditions.elementToBeClickable(mainPage.seeDeveloperToolsButton)).click();
+        mainPage.seeDeveloperToolsButton.click();
+        mainPage.findYourToolsButton.click();
 
-        // Assume-se que o findYourToolsButton foi corrigido no MainPage.java para evitar interceção
-        wait.until(ExpectedConditions.elementToBeClickable(mainPage.findYourToolsButton)).click();
-
-        WebElement productsList = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.id("products-page")
-        ));
-
+        WebElement productsList = driver.findElement(By.id("products-page"));
         assertTrue(productsList.isDisplayed());
         assertEquals("All Developer Tools and Products by JetBrains", driver.getTitle());
     }
