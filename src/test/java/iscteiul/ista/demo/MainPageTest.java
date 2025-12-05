@@ -73,15 +73,8 @@ public class MainPageTest {
     public void toolsMenu() {
         mainPage.toolsMenu.click();
 
-//    checking if the "Find your tool" button is displayed because for some absolutely stupid reason
-//    this: "div[data-test='main-submenu']"
-//    DOES NOT WORK!!!
-//    and THIS:
-//        "html > body > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(3) > header > div > div > div:nth-of-type(2) > div:nth-of-type(1) > div > nav > div:nth-of-type(2) > div > div" )
-//    IS AN ATROCITY
-
         WebElement menuPopupElement = wait.until(
-                ExpectedConditions.visibilityOf(mainPage.findYourToolsButton));
+                ExpectedConditions.visibilityOf(mainPage.menuPopup));
 
         assertTrue(menuPopupElement.isDisplayed());
     }
