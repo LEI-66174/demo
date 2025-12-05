@@ -55,6 +55,17 @@ public class MainPageTest {
         // --- FIM DO CÓDIGO DE COOKIES ---
 
         mainPage = new MainPage(driver);
+
+        try {
+            WebElement denyAllButton = wait.until(
+                    ExpectedConditions.elementToBeClickable(mainPage.buttondenyall)
+            );
+            denyAllButton.click();
+            Thread.sleep(500);
+        } catch (Exception ignored) {
+            System.out.println("Cookie not found.");
+        }
+
     }
 
     @AfterEach
@@ -85,6 +96,7 @@ public class MainPageTest {
     }
 
     @Test
+    @DisplayName( "Show \"Tools\" menu" )
     public void toolsMenu() {
 
         mainPage.seeDeveloperToolsButton.click();
