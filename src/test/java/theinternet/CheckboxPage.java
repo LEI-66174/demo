@@ -7,15 +7,13 @@ import org.openqa.selenium.support.PageFactory;
 
 public class CheckboxPage {
 
-    @FindBy( css = "input[type='checkbox' ")
+    @FindBy(css = "input[type='checkbox']:nth-of-type(1)")
     public WebElement checkbox1;
 
-    @FindBy( css = "input[type='checkbox' checked='']" )
+    @FindBy(css = "input[type='checkbox']:nth-of-type(2)")
     public WebElement checkbox2;
 
-    public MainPage(WebDriver driver) {
+    public CheckboxPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
-
-
 }
