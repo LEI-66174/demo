@@ -15,14 +15,17 @@ import org.openqa.selenium.interactions.Actions;
 public class MainPageTest {
     private WebDriver driver;
     private MainPage mainPage;
+    private WebDriverWait wait;
 
     @BeforeEach
-
+    @DisplayName( "Search \"Selenium\" on JetBrains.com" )
     public void setUp() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://www.jetbrains.com/");
+
+        wait = new WebDriverWait( driver, Duration.ofSeconds(10));
 
         // --- CÓDIGO PARA ACEITAR COOKIES ---
 
@@ -60,45 +63,45 @@ public class MainPageTest {
     }
 
     @Test
+    @DisplayName( "Search \"Selenium\" on JetBrains.com" )
     public void search() {
-        mainPage.searchButton.click(); // Abre a caixa de pesquisa (pop-up)
+        mainPage.searchButton.click();
 
-        // **CORREÇÃO:** Espera Explícita para o campo de input da pesquisa aparecer no pop-up
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        // wait until its clickable
+        WebElement searchField = wait.until(ExpectedConditions.elementToBeClickable(
+                mainPage.inputSearch
+        ));
 
-        // O campo de input é o primeiro a ser encontrado e preenchido
-        WebElement searchField = wait.until(
-                ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-test='search-input']"))
-        );
         searchField.sendKeys("Selenium");
+        searchField.click();
 
-        // O botão de submissão da pesquisa (geralmente dentro do pop-up)
+        // click on the "Advanced search Ctrl+K" button near the "Showing results for <<X>>"
         WebElement submitButton = driver.findElement(By.cssSelector("button[data-test='full-search-button']"));
         submitButton.click();
 
-        // Na página de resultados da pesquisa, verifica o valor do input
-        WebElement searchPageField = wait.until(
-                ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[data-test='search-input']"))
-        );
-        assertEquals("Selenium", searchPageField.getAttribute("value"));
+        //  Check the search results page field element
+        WebElement searchResultPageField = driver.findElement(By.cssSelector("input[data-test$='inner']"));
+        assertEquals("Selenium", searchResultPageField.getAttribute("value"));
     }
 
     @Test
     public void toolsMenu() {
-        mainPage.toolsMenu.click(); // Clica para abrir o menu suspenso
 
-        // **CORREÇÃO:** Espera Explícita para o menu pop-up ficar VISÍVEL
+        mainPage.seeDeveloperToolsButton.click();
+
+        // **CORREÇÃO:** Espera Explícita para garantir que o botão 'Find your tools' esteja clicável
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        WebElement menuPopup = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[data-test='main-submenu']"))
+        WebElement findYourTools = wait.until(
+                ExpectedConditions.elementToBeClickable(mainPage.findYourToolsButton)
         );
 
+
         // Asserção de que o pop-up está visível
-        assertTrue(menuPopup.isDisplayed());
+        assertTrue(findYourTools.isDisplayed());
     }
 
     @Test
+    @DisplayName( "Check JetBrains Tools catalog" )
     public void navigationToAllTools() {
         // 1. Clica no menu principal para abrir o submenu
         mainPage.seeDeveloperToolsButton.click();
