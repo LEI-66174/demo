@@ -86,9 +86,4 @@ public class MainPageTest {
         assertTrue(productsList.isDisplayed());
         assertEquals("All Developer Tools and Products by JetBrains", driver.getTitle());
     }
-<<<<<<< HEAD
 }
-=======
-
-}
->>>>>>> origin/master

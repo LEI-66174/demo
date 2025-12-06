@@ -20,7 +20,7 @@ public class MainPage {
     public WebElement searchButton;
 
     @FindBy( css = "button[class='ch2-btn ch2-deny-all-btn ch2-btn-primary']" )
-    public WebElement buttondenyall;
+    public WebElement buttonDenyAll;
 
     @FindBy( css = "input[data-test*='inner']" )
     public WebElement inputSearch;
