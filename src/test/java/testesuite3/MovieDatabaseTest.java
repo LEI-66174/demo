@@ -27,7 +27,7 @@ public class MovieDatabaseTest
     }
 
     @Test
-    void checkIMDB() throws InterruptedException
+    void checkIMDB()
     {
         String movieName = "Law Abiding Citizen";
         MovieDatabasePage.MovieRow row = mainPage.findInfoAboutMovie( movieName);
