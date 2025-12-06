@@ -8,16 +8,12 @@ import java.time.Duration;
 
 public class BookstorePage {
 
-    // --- Elementos de Login ---
     private final SelenideElement usernameInput = $("input[name='username']");
     private final SelenideElement passwordInput = $("input[name='password']");
 
-    // --- Elementos de Navegação e Categoria ---
     private final SelenideElement adminLink = $(byText("Admin"));
     private final SelenideElement addCategoryLink = $(byText("Add New Category"));
 
-    // CORREÇÃO ESSENCIAL: Selecionar o ÚLTIMO vaadin-text-field, que é o campo recém-criado
-    // na parte inferior da lista de categorias.
     private final SelenideElement categoryNameInput = $("vaadin-text-field:last-of-type");
 
     public BookstorePage() {
@@ -44,7 +40,6 @@ public class BookstorePage {
     public BookstorePage clickAddNewCategory() {
         addCategoryLink.shouldBe(visible, interactable).click();
 
-        // Espera crucial: Garante que o campo foi criado e está visível.
         categoryNameInput.shouldBe(visible, Duration.ofSeconds(5));
 
         return this;
@@ -55,14 +50,11 @@ public class BookstorePage {
      * e simula o "deselecionar" (blur) com a tecla TAB para forçar o salvamento no Vaadin.
      */
     public BookstorePage enterCategoryName(String name) {
-        // CORREÇÃO CRÍTICA: Espera que o campo esteja visível, editável E habilitado,
-        // resolvendo o InvalidElementStateException.
+
         categoryNameInput.shouldBe(visible, editable, enabled).setValue(name);
 
-        // Simula o 'deselecionar' (TAB) para sair do campo, o que salva a nova categoria.
         categoryNameInput.pressTab();
 
-        // Pequena espera para o Vaadin finalizar o processo de salvamento.
         sleep(1000);
 
         return this;

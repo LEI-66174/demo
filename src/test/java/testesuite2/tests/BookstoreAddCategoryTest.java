@@ -18,7 +18,6 @@ public class BookstoreAddCategoryTest {
 
     @BeforeEach
     public void setUp() {
-        // Configurações Selenide
         Configuration.browser = "chrome";
         Configuration.timeout = 15000;
         Configuration.browserSize = "1920x1080";
@@ -31,22 +30,18 @@ public class BookstoreAddCategoryTest {
 
     @AfterEach
     public void tearDown() {
-        // Garante o fechamento do navegador após a conclusão do teste.
         closeWebDriver();
     }
 
     @Test
     void addCategoryTest() {
-        // Nome da categoria como "Teste" + timestamp
         String newCategoryName = "Teste " + System.currentTimeMillis();
 
         bookstorePage
                 .clickAdmin()
                 .clickAddNewCategory()
-                // Este método agora garante que o campo está editável, digita e salva (via TAB)
                 .enterCategoryName(newCategoryName);
 
-        // Verificação
         boolean exists = bookstorePage.isCategoryPresent(newCategoryName);
         assertTrue(exists, "A categoria '" + newCategoryName + "' não foi encontrada na lista de categorias.");
     }
