@@ -1,10 +1,10 @@
-package testsuite4_113239.tests;
+package testsuite4.tests;
 
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import testsuite4_113239.pages.Form;
+import testsuite4.pages.Form;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.closeWebDriver;

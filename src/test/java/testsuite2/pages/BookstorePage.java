@@ -1,4 +1,4 @@
-package testesuite2.pages;
+package testsuite2.pages;
 
 import com.codeborne.selenide.SelenideElement;
 import static com.codeborne.selenide.Selectors.*;

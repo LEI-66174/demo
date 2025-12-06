@@ -1,4 +1,4 @@
-package testesuite3;
+package testsuite3;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;

@@ -1,12 +1,11 @@
-package testsuite4_113239.pages;
+package testsuite4.pages;
 
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.*;
-import org.openqa.selenium.SearchContext;
+
 import org.openqa.selenium.WebElement;
 
 import static com.codeborne.selenide.Selenide.$;
