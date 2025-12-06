@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Teste da funcionalidade "Adicionar categoria"
- * TestSuite 2 – Vaadin Bookstore
  */
 public class BookstoreAddCategoryTest {
 
@@ -19,31 +18,36 @@ public class BookstoreAddCategoryTest {
 
     @BeforeEach
     public void setUp() {
+        // Configurações Selenide
         Configuration.browser = "chrome";
-        Configuration.timeout = 10000;
+        Configuration.timeout = 15000;
+        Configuration.browserSize = "1920x1080";
+        Configuration.clickViaJs = true;
 
         bookstorePage = new BookstorePage()
-                .openPage("https://vaadin-bookstore-example.demo.vaadin.com/");
+                .openPage("https://vaadin-bookstore-example.demo.vaadin.com/")
+                .loginAsAdmin();
     }
 
     @AfterEach
     public void tearDown() {
+        // Garante o fechamento do navegador após a conclusão do teste.
         closeWebDriver();
     }
 
     @Test
-    void addCategory() {
-        String newCategoryName = "Test Category";
+    void addCategoryTest() {
+        // Nome da categoria como "Teste" + timestamp
+        String newCategoryName = "Teste " + System.currentTimeMillis();
 
         bookstorePage
-                .clickCategories()
-                .clickAddCategory()
-                .enterCategoryName(newCategoryName)
-                .clickSave();
+                .clickAdmin()
+                .clickAddNewCategory()
+                // Este método agora garante que o campo está editável, digita e salva (via TAB)
+                .enterCategoryName(newCategoryName);
 
         // Verificação
         boolean exists = bookstorePage.isCategoryPresent(newCategoryName);
-
-        assertTrue(exists, "A categoria não foi encontrada no grid.");
+        assertTrue(exists, "A categoria '" + newCategoryName + "' não foi encontrada na lista de categorias.");
     }
 }

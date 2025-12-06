@@ -1,92 +1,74 @@
 package testesuite2.pages;
 
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-
+import static com.codeborne.selenide.Selectors.*;
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
+import java.time.Duration;
 
-/**
- * Page Object para a página Bookstore (testsuite 2)
- * Funcionalidade: Adicionar uma categoria
- * URL: https://vaadin-bookstore-example.demo.vaadin.com/
- */
 public class BookstorePage {
 
+    // --- Elementos de Login ---
+    private final SelenideElement usernameInput = $("input[name='username']");
+    private final SelenideElement passwordInput = $("input[name='password']");
+
+    // --- Elementos de Navegação e Categoria ---
+    private final SelenideElement adminLink = $(byText("Admin"));
+    private final SelenideElement addCategoryLink = $(byText("Add New Category"));
+
+    // CORREÇÃO ESSENCIAL: Selecionar o ÚLTIMO vaadin-text-field, que é o campo recém-criado
+    // na parte inferior da lista de categorias.
+    private final SelenideElement categoryNameInput = $("vaadin-text-field:last-of-type");
+
     public BookstorePage() {
-        PageFactory.initElements((SearchContext) webdriver(), this);
     }
 
-    // Botão "Categories"
-    @FindBy(xpath = "//vaadin-button[contains(., 'Categories')]")
-    public SelenideElement categoriesButton;
-
-    // Botão "Add category"
-    @FindBy(xpath = "//vaadin-button[contains(., 'Add category')]")
-    public SelenideElement addCategoryButton;
-
-    // Campo do nome da categoria
-    @FindBy(xpath = "//vaadin-text-field[@label='Category name']/input")
-    public SelenideElement categoryNameField;
-
-    // Botão "Save"
-    @FindBy(xpath = "//vaadin-button[contains(., 'Save')]")
-    public SelenideElement saveButton;
-
-    // Lista das categorias (grid)
-    @FindBy(tagName = "vaadin-grid")
-    public SelenideElement categoriesGrid;
-
-
-    /**
-     * Abre a página inicial da Bookstore.
-     */
     public BookstorePage openPage(String url) {
         open(url);
         return this;
     }
 
-    /**
-     * Clica no botão "Categories".
-     */
-    public BookstorePage clickCategories() {
-        categoriesButton.shouldBe(visible).click();
+    public BookstorePage loginAsAdmin() {
+        if (usernameInput.exists()) {
+            usernameInput.shouldBe(visible).setValue("admin");
+            passwordInput.shouldBe(visible).setValue("admin").pressEnter();
+        }
+        return this;
+    }
+
+    public BookstorePage clickAdmin() {
+        adminLink.shouldBe(visible).click();
+        return this;
+    }
+
+    public BookstorePage clickAddNewCategory() {
+        addCategoryLink.shouldBe(visible, interactable).click();
+
+        // Espera crucial: Garante que o campo foi criado e está visível.
+        categoryNameInput.shouldBe(visible, Duration.ofSeconds(5));
+
         return this;
     }
 
     /**
-     * Clica no botão "Add category".
-     */
-    public BookstorePage clickAddCategory() {
-        addCategoryButton.shouldBe(visible).click();
-        return this;
-    }
-
-    /**
-     * Introduz o nome da categoria.
+     * Insere o nome da categoria, garantindo que o campo esteja no estado editável,
+     * e simula o "deselecionar" (blur) com a tecla TAB para forçar o salvamento no Vaadin.
      */
     public BookstorePage enterCategoryName(String name) {
-        categoryNameField.shouldBe(visible).setValue(name);
+        // CORREÇÃO CRÍTICA: Espera que o campo esteja visível, editável E habilitado,
+        // resolvendo o InvalidElementStateException.
+        categoryNameInput.shouldBe(visible, editable, enabled).setValue(name);
+
+        // Simula o 'deselecionar' (TAB) para sair do campo, o que salva a nova categoria.
+        categoryNameInput.pressTab();
+
+        // Pequena espera para o Vaadin finalizar o processo de salvamento.
+        sleep(1000);
+
         return this;
     }
 
-    /**
-     * Clica no botão "Save".
-     */
-    public BookstorePage clickSave() {
-        saveButton.shouldBe(visible).click();
-        return this;
-    }
-
-    /**
-     * Verifica se a categoria foi adicionada ao grid.
-     */
-    public boolean isCategoryPresent(String categoryName) {
-        return categoriesGrid
-                .$x(".//vaadin-grid-cell-content[contains(text(), '" + categoryName + "')]")
-                .shouldBe(visible)
-                .exists();
+    public boolean isCategoryPresent(String name) {
+        return $(byText(name)).shouldBe(visible).exists();
     }
 }
