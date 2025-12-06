@@ -7,14 +7,8 @@ import static com.codeborne.selenide.Selenide.*;
 
 // page_url = https://vaadin-database-example.demo.vaadin.com/
 
-
 public class MovieDatabasePage
 {
-    public MovieDatabasePage openPage(String url) {
-        open(url);
-        return this;
-    }
-
     public SelenideElement filterField = $("vaadin-grid-cell-content");
     private SelenideElement grid = $("vaadin-grid");
 
