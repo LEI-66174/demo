@@ -1,4 +1,4 @@
-package iscteiul.ista.demo.testSuite4.bookstore.pages;
+package testsuite1.pages;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;

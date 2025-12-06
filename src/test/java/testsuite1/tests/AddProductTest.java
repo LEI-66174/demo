@@ -1,8 +1,8 @@
-package iscteiul.ista.demo.testSuite4.bookstore.tests;
+package testsuite1.tests;
 
 import com.codeborne.selenide.Configuration;
-import iscteiul.ista.demo.testSuite4.bookstore.pages.InventoryPage;
-import iscteiul.ista.demo.testSuite4.bookstore.pages.LoginPage;
+import testsuite1.pages.InventoryPage;
+import testsuite1.pages.LoginPage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
