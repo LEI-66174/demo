@@ -31,7 +31,7 @@ public class MainPageTest {
 
         try {
             WebElement denyAllButton = wait.until(
-                    ExpectedConditions.elementToBeClickable(mainPage.buttondenyall)
+                    ExpectedConditions.elementToBeClickable(mainPage.buttonDenyAll)
             );
             denyAllButton.click();
             Thread.sleep(500);
@@ -86,4 +86,9 @@ public class MainPageTest {
         assertTrue(productsList.isDisplayed());
         assertEquals("All Developer Tools and Products by JetBrains", driver.getTitle());
     }
+<<<<<<< HEAD
 }
+=======
+
+}
+>>>>>>> origin/master
