@@ -13,6 +13,13 @@ target/
 *.iml
 *.ipr
 
+# Ignore everything in .idea
+.idea/*
+# But keep this subdirectory
+!.idea/libraries/
+# (Optional) Keep the directory itself
+!.idea/
+
 ### Eclipse ###
 .apt_generated
 .classpath
