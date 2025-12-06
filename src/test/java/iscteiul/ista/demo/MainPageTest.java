@@ -58,7 +58,7 @@ public class MainPageTest {
 
         try {
             WebElement denyAllButton = wait.until(
-                    ExpectedConditions.elementToBeClickable(mainPage.buttondenyall)
+                    ExpectedConditions.elementToBeClickable(mainPage.buttonDenyAll)
             );
             denyAllButton.click();
             Thread.sleep(500);
